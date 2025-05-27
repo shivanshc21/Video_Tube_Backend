@@ -1,6 +1,9 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
+// console.log('Cloudinary API Key:', process.env.CLOUDINARY_API_KEY);
 
 const app = express();
 
