@@ -1,7 +1,7 @@
 import { asynchandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apiError.js"; 
 import { User } from "../models/user.model.js";
-import { uploadCloudinary } from "../utils/cloudinary.js";
+import { uploadCloudinary, deleteCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -312,19 +312,30 @@ const updateUserAvatar = asynchandler( async(req,res) => {
   }
 
   const avatar = await uploadCloudinary(avatarLocalPath);
-  if (!avatar.url){
+  
+  if (!avatar.url ) {
     throw new ApiError(400, "Error while uploading the avatar")
   }
   
-  const user = await findByIdAndUpdate(
+  // const existingUser = await User.findById(req.user._id);
+  //  if (!existingUser) {
+  //   throw new ApiError(404, "User not found");
+  // }
+  // await deleteCloudinary(existingUser.avatar?.public_id); // delete old avatar from cloudinary if exists
+
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set:{
-        avatar: avatar.url
+         avatar: avatar.url//{
+        //   url: avatar.url,
+        //   public_id: avatar.public_id // if you want to store public_id for future reference
+        // }
       }
     },
     {new: true} // return the updated user
   ).select("-password")
+
 
   return res
   .status(200)  
@@ -345,12 +356,21 @@ const updateUserCoverImage = asynchandler( async(req,res) => {
   if (!coverImage.url){
     throw new ApiError(400, "Error while uploading the cover image")
   }
+
+  // const existingUser = await User.findById(req.user._id);
+  //  if (!existingUser) {
+  //   throw new ApiError(404, "User not found");
+  // }
+  // await deleteCloudinary(existingUser.coverImage?.public_id); 
   
-  const user = await findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set:{
-        coverImage: coverImage.url
+        coverImage: coverImage.url //{
+        //   url: coverImage.url,
+        //   public_id: coverImage.public_id // if you want to store public_id for future reference
+        // }
       }
     },
     {new: true} // return the updated user

@@ -1,5 +1,5 @@
 import  { Router } from "express";
-import  { registerUser, loginUser, logoutUser, refreshAccessToken } from "../controllers/user.controller.js";
+import  { registerUser, loginUser, logoutUser, refreshAccessToken, updateUserAvatar, updateUserCoverImage } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import {upload} from "../middlewares/multer.middleware.js";   // multer is a middleware in uploading files to cloudinary
 
@@ -24,5 +24,9 @@ router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJwt, logoutUser)  
 
 router.route("/refresh-token").post(refreshAccessToken)
+
+router.route("/update-avatar").post(verifyJwt, upload.single("avatar"), updateUserAvatar)
+
+router.route("/update-coverimage").post(verifyJwt, upload.single("coverImage"), updateUserCoverImage)
 
 export default router;  
