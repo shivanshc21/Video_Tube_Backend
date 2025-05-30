@@ -1,5 +1,5 @@
 import  { Router } from "express";
-import  { registerUser, loginUser, logoutUser, refreshAccessToken, updateUserAvatar, updateUserCoverImage } from "../controllers/user.controller.js";
+import  { registerUser, loginUser, logoutUser, refreshAccessToken, updateUserAvatar, updateUserCoverImage, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserChannelProfile, getWatchHistory } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import {upload} from "../middlewares/multer.middleware.js";   // multer is a middleware in uploading files to cloudinary
 
@@ -25,8 +25,18 @@ router.route("/logout").post(verifyJwt, logoutUser)
 
 router.route("/refresh-token").post(refreshAccessToken)
 
-router.route("/update-avatar").post(verifyJwt, upload.single("avatar"), updateUserAvatar)
+router.route("/change-password").post(verifyJwt,changeCurrentPassword)
 
-router.route("/update-coverimage").post(verifyJwt, upload.single("coverImage"), updateUserCoverImage)
+router.route("/current-user").get(verifyJwt, getCurrentUser)
+
+router.route("/update-account").patch(verifyJwt, updateAccountDetails)
+
+router.route("/update-avatar").patch(verifyJwt, upload.single("avatar"), updateUserAvatar)
+
+router.route("/update-coverimage").patch(verifyJwt, upload.single("coverImage"), updateUserCoverImage)
+
+router.route("/c/:username").get(verifyJwt, getUserChannelProfile)
+
+router.route("history").get(verifyJwt, getWatchHistory)
 
 export default router;  
