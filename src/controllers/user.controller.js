@@ -248,7 +248,7 @@ const changeCurrentPassword = asynchandler( async(req,res) => {
   }
 
   user.password = newPassword; // this will trigger pre-save hook to hash the password
-  await user.save( validateBeforeSave = false); // skip validation for password field
+  await user.save( {validateBeforeSave: false}); // skip validation for password field
 
   return res
   .status(200)
@@ -422,7 +422,7 @@ const getUserChannelProfile = asynchandler( async(req,res) => {
           $size: "$subscriptions"
         },
         isSubscribed: {
-          $condition: {
+          $cond: {
             if: {
               $in: [req.user?._id, "$subscriptions.subscriber"]
             },
@@ -459,7 +459,7 @@ const getUserChannelProfile = asynchandler( async(req,res) => {
 })
 
 const getWatchHistory = asynchandler( async(req,res) => {
-  const user = User.aggregate([
+  const user = await User.aggregate([
     {
       $match: {
         _id: new mongoose.Types.ObjectId(req.user._id)
@@ -470,14 +470,14 @@ const getWatchHistory = asynchandler( async(req,res) => {
         from: "videos",
         localField: "watchHistory",
         foreignField: "_id",
-        at: "watchHistory",
+        as: "watchHistory",
         pipeline: [
           {
             $lookup: {
               from: "users",
               localField: "owner",
               foreignField: "_id",
-              at: "owner",
+              as: "owner",
               pipeline: [
               {
                 $project: {
@@ -505,7 +505,7 @@ const getWatchHistory = asynchandler( async(req,res) => {
   return res
   .status(200)
   .json(
-    new ApiResponse(200, user[0].WatchHistory, "Successfully fetched the watch history")
+    new ApiResponse(200, user[0].watchHistory, "Successfully fetched the watch history")
   )
 })
 
