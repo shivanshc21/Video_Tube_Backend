@@ -1,4 +1,5 @@
-import {Schema} from "mongoose";
+import {Schema} from "mongoose";    
+import mongoose from "mongoose";
 
 const playlistSchema = new Schema(
     {
