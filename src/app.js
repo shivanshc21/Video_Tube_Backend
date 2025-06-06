@@ -23,11 +23,13 @@ import userRouter from "./routes/user.routes.js";
 import videoRouter from "./routes/video.route.js";
 import subscriptionRouter from "./routes/subscription.routes.js"
 import commentRouter from "./routes/comment.routes.js"
+import tweetRouter from "./routes/tweet.routes.js"
 
 //Routes Declaration (middlewares used)
 app.use("/api/v1/users", userRouter);      // https://localhost:8000/api/v1/users/register
 app.use("/api/v1/videos",videoRouter)
 app.use("/api/v1/subscriptions",subscriptionRouter)
 app.use("/api/v1/comments",commentRouter)
+app.use("/api/v1/tweets",tweetRouter)
 
 export { app };
